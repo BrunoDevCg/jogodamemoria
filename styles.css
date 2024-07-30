@@ -1,0 +1,65 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background-color: #f0f0f0;
+}
+
+h1 {
+    margin: 20px 0;
+}
+
+.info {
+    margin: 20px;
+}
+
+#game-board {
+    display: grid;
+    grid-template-columns: repeat(4, 100px);
+    grid-gap: 10px;
+    justify-content: center;
+    margin: 20px auto;
+}
+
+.card {
+    width: 100px;
+    height: 100px;
+    background-color: #2e3d49;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+    color: white;
+    cursor: pointer;
+}
+
+.card.flipped {
+    background-color: #ffffff;
+    color: #2e3d49;
+}
+
+.card.hidden {
+    background-color: #2e3d49;
+    color: #2e3d49;
+}
+
+#ranking {
+    margin: 20px auto;
+}
+
+#ranking h2 {
+    margin: 10px 0;
+}
+
+#ranking-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+#ranking-list li {
+    background: #ffffff;
+    border: 1px solid #2e3d49;
+    margin: 5px 0;
+    padding: 10px;
+    border-radius: 5px;
+}
