@@ -27,8 +27,10 @@ document.addEventListener('DOMContentLoaded', () => {
     let moves = 0;
     let timer = 0;
     let timerInterval;
+    let lockBoard = false; // Impedir cliques enquanto o par de cartas está sendo verificado
 
     function createBoard() {
+        gameBoard.innerHTML = ''; // Limpar o tabuleiro antes de reiniciar
         cardArray.forEach((card, index) => {
             const cardElement = document.createElement('div');
             cardElement.setAttribute('class', 'card hidden');
@@ -36,12 +38,16 @@ document.addEventListener('DOMContentLoaded', () => {
             cardElement.addEventListener('click', flipCard);
             gameBoard.appendChild(cardElement);
         });
+        resetGame();
         startTimer();
     }
 
     function flipCard() {
+        if (lockBoard) return; // Bloquear cliques enquanto o par de cartas está sendo comparado
+
         const cardId = this.getAttribute('data-id');
-        if (cardsChosenId.includes(cardId)) return; // Evitar clicar na mesma carta duas vezes
+        if (cardsChosenId.includes(cardId) || cardsWon.some(card => card[0] === cardArray[cardId].name)) return; // Evitar clicar na mesma carta duas vezes ou em cartas já combinadas
+
         cardsChosen.push(cardArray[cardId].name);
         cardsChosenId.push(cardId);
         this.innerText = cardArray[cardId].img;
@@ -49,6 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
         this.classList.add('flipped');
 
         if (cardsChosen.length === 2) {
+            lockBoard = true; // Bloquear cliques até que a comparação termine
             setTimeout(checkForMatch, 500);
         }
     }
@@ -72,6 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         cardsChosen = [];
         cardsChosenId = [];
+        lockBoard = false; // Liberar cliques após a comparação
 
         if (cardsWon.length === cardArray.length / 2) {
             clearInterval(timerInterval);
@@ -84,6 +92,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function startTimer() {
+        timer = 0;
+        clearInterval(timerInterval); // Garantir que o timer seja reiniciado
         timerInterval = setInterval(() => {
             timer++;
             timerDisplay.innerText = timer;
@@ -109,6 +119,15 @@ document.addEventListener('DOMContentLoaded', () => {
     function resetRanking() {
         localStorage.removeItem('ranking');
         displayRanking();
+    }
+
+    function resetGame() {
+        cardsChosen = [];
+        cardsChosenId = [];
+        cardsWon = [];
+        moves = 0;
+        moveCounter.innerText = moves;
+        timerDisplay.innerText = 0;
     }
 
     resetRankingButton.addEventListener('click', resetRanking);
