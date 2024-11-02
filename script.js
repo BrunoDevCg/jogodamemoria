@@ -21,16 +21,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const timerDisplay = document.getElementById('timer');
     const rankingList = document.getElementById('ranking-list');
     const resetRankingButton = document.getElementById('reset-ranking');
+    const restartGameButton = document.getElementById('restart-game'); // Botão para reiniciar o jogo
     let cardsChosen = [];
     let cardsChosenId = [];
     let cardsWon = [];
     let moves = 0;
     let timer = 0;
     let timerInterval;
-    let lockBoard = false; // Impedir cliques enquanto o par de cartas está sendo verificado
+    let lockBoard = false;
 
     function createBoard() {
-        gameBoard.innerHTML = ''; // Limpar o tabuleiro antes de reiniciar
+        gameBoard.innerHTML = '';
         cardArray.forEach((card, index) => {
             const cardElement = document.createElement('div');
             cardElement.setAttribute('class', 'card hidden');
@@ -43,10 +44,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function flipCard() {
-        if (lockBoard) return; // Bloquear cliques enquanto o par de cartas está sendo comparado
+        if (lockBoard) return;
 
         const cardId = this.getAttribute('data-id');
-        if (cardsChosenId.includes(cardId) || cardsWon.some(card => card[0] === cardArray[cardId].name)) return; // Evitar clicar na mesma carta duas vezes ou em cartas já combinadas
+        if (cardsChosenId.includes(cardId) || cardsWon.some(card => card[0] === cardArray[cardId].name)) return;
 
         cardsChosen.push(cardArray[cardId].name);
         cardsChosenId.push(cardId);
@@ -55,7 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
         this.classList.add('flipped');
 
         if (cardsChosen.length === 2) {
-            lockBoard = true; // Bloquear cliques até que a comparação termine
+            lockBoard = true;
             setTimeout(checkForMatch, 500);
         }
     }
@@ -79,7 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         cardsChosen = [];
         cardsChosenId = [];
-        lockBoard = false; // Liberar cliques após a comparação
+        lockBoard = false;
 
         if (cardsWon.length === cardArray.length / 2) {
             clearInterval(timerInterval);
@@ -93,7 +94,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function startTimer() {
         timer = 0;
-        clearInterval(timerInterval); // Garantir que o timer seja reiniciado
+        clearInterval(timerInterval);
         timerInterval = setInterval(() => {
             timer++;
             timerDisplay.innerText = timer;
@@ -104,8 +105,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const newScore = { name, moves, time };
         let ranking = JSON.parse(localStorage.getItem('ranking')) || [];
         ranking.push(newScore);
-        ranking.sort((a, b) => a.moves - b.moves || a.time - b.time); // Ordenar por jogadas e tempo
-        ranking = ranking.slice(0, 10); // Manter apenas os 10 melhores
+        ranking.sort((a, b) => a.moves - b.moves || a.time - b.time);
+        ranking = ranking.slice(0, 10);
         localStorage.setItem('ranking', JSON.stringify(ranking));
     }
 
@@ -130,7 +131,13 @@ document.addEventListener('DOMContentLoaded', () => {
         timerDisplay.innerText = 0;
     }
 
+    function restartGame() {
+        resetGame(); // Resetar as variáveis do jogo
+        createBoard(); // Recriar o tabuleiro
+    }
+
     resetRankingButton.addEventListener('click', resetRanking);
+    restartGameButton.addEventListener('click', restartGame); // Listener para reiniciar o jogo
 
     createBoard();
     displayRanking();
