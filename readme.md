@@ -40,6 +40,7 @@ Como Executar o Projeto
     Faça o download ou clone este repositório.
     Abra o arquivo index.html em um navegador de sua preferência.
     Divirta-se jogando e tente bater seu recorde no menor número de movimentos e tempo!
+    Ou acesse: https://brunodevcg.github.io/jogodamemoria/
 
 Funcionalidades Futuras
 
